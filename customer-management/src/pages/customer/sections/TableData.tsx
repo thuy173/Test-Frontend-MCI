@@ -2,6 +2,7 @@ import Pagination from "@/components/Pagination";
 import TableHeaderComponent from "@/components/TableHeader";
 import TableRowComponent from "@/components/TableRow";
 import { Table, TableBody } from "@/components/ui/table";
+import { customers } from "@/types/customer/seed";
 import CustomTableProps from "@/types/customer/table";
 import React from "react";
 
@@ -17,119 +18,26 @@ type Customer = {
   createAt: string;
 };
 
-const customers = [
-  {
-    index: 1,
-    customerCode: "INV001",
-    fullName: "Nguyen Van A",
-    phoneNumber: "0987654321",
-    email: "nguyenvana12@gmail.com",
-    marketer: "Nguyen Thi A",
-    source: "Website",
-    note: "Goi tu van ngoai gio hanh chinh",
-    createAt: "10/12/2024",
-  },
-  {
-    index: 2,
-    customerCode: "INV002",
-    fullName: "Nguyen Van B",
-    phoneNumber: "0987654321",
-    email: "nguyenvana12@gmail.com",
-    marketer: "Nguyen Thi B",
-    source: "Website",
-    note: "Goi tu van ngoai gio hanh chinh",
-    createAt: "09/12/2024",
-  },
-  {
-    index: 2,
-    customerCode: "INV002",
-    fullName: "Nguyen Van B",
-    phoneNumber: "0987654321",
-    email: "nguyenvana12@gmail.com",
-    marketer: "Nguyen Thi B",
-    source: "Website",
-    note: "Goi tu van ngoai gio hanh chinh",
-    createAt: "09/12/2024",
-  },
-  {
-    index: 2,
-    customerCode: "INV002",
-    fullName: "Nguyen Van B",
-    phoneNumber: "0987654321",
-    email: "nguyenvana12@gmail.com",
-    marketer: "Nguyen Thi B",
-    source: "Website",
-    note: "Goi tu van ngoai gio hanh chinh",
-    createAt: "09/12/2024",
-  },
-  {
-    index: 2,
-    customerCode: "INV002",
-    fullName: "Nguyen Van B",
-    phoneNumber: "0987654321",
-    email: "nguyenvana12@gmail.com",
-    marketer: "Nguyen Thi B",
-    source: "Website",
-    note: "Goi tu van ngoai gio hanh chinh",
-    createAt: "09/12/2024",
-  },
-  {
-    index: 2,
-    customerCode: "INV002",
-    fullName: "Nguyen Van B",
-    phoneNumber: "0987654321",
-    email: "nguyenvana12@gmail.com",
-    marketer: "Nguyen Thi B",
-    source: "Website",
-    note: "Goi tu van ngoai gio hanh chinh",
-    createAt: "09/12/2024",
-  },
-  {
-    index: 2,
-    customerCode: "INV002",
-    fullName: "Nguyen Van B",
-    phoneNumber: "0987654321",
-    email: "nguyenvana12@gmail.com",
-    marketer: "Nguyen Thi B",
-    source: "Website",
-    note: "Goi tu van ngoai gio hanh chinh",
-    createAt: "09/12/2024",
-  },
-  {
-    index: 2,
-    customerCode: "INV002",
-    fullName: "Nguyen Van B",
-    phoneNumber: "0987654321",
-    email: "nguyenvana12@gmail.com",
-    marketer: "Nguyen Thi B",
-    source: "Website",
-    note: "Goi tu van ngoai gio hanh chinh",
-    createAt: "09/12/2024",
-  },
-  {
-    index: 2,
-    customerCode: "INV002",
-    fullName: "Nguyen Van B",
-    phoneNumber: "0987654321",
-    email: "nguyenvana12@gmail.com",
-    marketer: "Nguyen Thi B",
-    source: "Website",
-    note: "Goi tu van ngoai gio hanh chinh",
-    createAt: "09/12/2024",
-  },
-];
-
 const CustomTable = <T,>({ headers, data, columns }: CustomTableProps<T>) => (
   <div className="border border-gray-300 rounded-t-xl overflow-hidden">
-    <Table className="w-full">
+    {/* <Table className="w-full">
       <TableHeaderComponent headers={headers} />
-    </Table>
+    </Table> */}
     <div className="max-h-80 max-w-full overflow-x-auto overflow-y-auto">
       <Table className="w-full">
+        <TableHeaderComponent headers={headers} />
         <TableBody>
-          {data.map((row, index) => (
-            <TableRowComponent key={index} data={row} columns={columns} />
-          ))}
+          {data.length ? (
+            data.map((row, index) => (
+              <TableRowComponent key={index} data={row} columns={columns} />
+            ))
+          ) : (
+            <TableRowComponent
+              key="empty-row"
+              columns={columns}
+              data={undefined}
+            />
+          )}
         </TableBody>
       </Table>
     </div>
@@ -146,19 +54,19 @@ const CustomerTable: React.FC = () => {
     { label: "Người tiếp thị" },
     { label: "Nguồn" },
     { label: "Ghi chú" },
-    { label: "Ngày tạo", className: "text-right" },
+    { label: "Ngày tạo" },
   ];
 
   const columns: { key: keyof Customer; className?: string }[] = [
     { key: "index", className: "text-center" },
-    { key: "customerCode", className: "font-medium" },
+    { key: "customerCode" },
     { key: "fullName" },
     { key: "phoneNumber" },
     { key: "email" },
     { key: "marketer" },
     { key: "source" },
     { key: "note" },
-    { key: "createAt", className: "text-right" },
+    { key: "createAt" },
   ];
 
   return (

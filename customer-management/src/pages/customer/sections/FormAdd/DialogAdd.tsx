@@ -1,4 +1,3 @@
-import CustomSelect from "@/components/CustomSelect";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,10 +7,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import React from "react";
 import TableForm from "./TableForm";
+import ContactInfoForm from "./ContactInfoForm";
+import AddressInfoForm from "./AddressInfoForm";
+import BasicInfoForm from "./BasicInfoForm";
+import { useAppDispatch } from "@/hooks/use-app-dispatch";
+import { createCustomer } from "@/redux/apps/customer/customerSlice";
+import * as Yup from "yup";
+import CustomerReqDto from "@/types/customer/customer";
+import { Form, Formik } from "formik";
+
+const customerValidationSchema = Yup.object({
+  full_name: Yup.string().required("Họ tên khách hàng là bắt buộc"),
+});
 
 interface AddCustomerDialogProps {
   isOpen: boolean;
@@ -22,6 +31,43 @@ const AddCustomerDialog: React.FC<AddCustomerDialogProps> = ({
   isOpen,
   onClose,
 }) => {
+  const dispatch = useAppDispatch();
+
+  const handleSubmit = async (values: CustomerReqDto) => {
+    try {
+      await dispatch(createCustomer(values));
+    } catch (error) {
+      console.error("Create customer error details:", error);
+    }
+  };
+
+  const initialValues: CustomerReqDto = {
+    full_name: "",
+    gender: "Nam",
+    date_of_birth: "",
+    status: 0,
+    source: 0,
+    phone_number: "",
+    email: "",
+    address: "",
+    city: "",
+    district: "",
+    ward: "",
+    detailed_info: "",
+    follow_up_date: "",
+    follow_down_date: "",
+    notes: "",
+    comments: [
+      {
+        time: "",
+        title: "",
+        status_id: 0,
+      },
+    ],
+    service: [],
+    social_media: 0,
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogDescription />
@@ -31,137 +77,66 @@ const AddCustomerDialog: React.FC<AddCustomerDialogProps> = ({
             Tạo khách hàng
           </DialogTitle>
         </DialogHeader>
-        <div className="container space-y-5">
-          {/* Basic Info */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="flex flex-col gap-1">
-              <label className="text-sm text-gray-400">
-                Họ tên khách hàng <span className="text-red-600">*</span>
-              </label>
-              <Input type="text" />
-            </div>
-            <div className="flex justify-center items-center pt-5 gap-3">
-              <label className="text-sm text-gray-400">Giới tính</label>
-              <div className="flex items-center gap-4">
-                <label className="flex items-center">
-                  <input type="radio" name="gender" className="mr-2" /> Nam
-                </label>
-                <label className="flex items-center">
-                  <input type="radio" name="gender" className="mr-2" /> Nữ
-                </label>
-                <label className="flex items-center">
-                  <input type="radio" name="gender" className="mr-2" /> Khác
-                </label>
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-sm text-gray-400">Ngày sinh</label>
-              <Input type="date" />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-1 grid grid-cols-2 gap-3">
-              <CustomSelect
-                options={[
-                  { label: "Website", value: "website" },
-                  { label: "Facebook", value: "facebook" },
-                ]}
-                label={
-                  <>
-                    Nguồn khách hàng <span className="text-red-600">*</span>
-                  </>
-                }
-                onChange={() => {}}
-              />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={customerValidationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ values, errors, touched, handleChange, setFieldValue }) => (
+            <Form className="space-y-5">
+              <div className="container space-y-5">
+                {/* Basic Info */}
+                <BasicInfoForm
+                  values={values}
+                  errors={errors}
+                  touched={touched}
+                  handleChange={handleChange}
+                  setFieldValue={setFieldValue}
+                />
 
-              <CustomSelect
-                options={[
-                  { label: "Yêu cầu trải nghiệm", value: "experience" },
-                  { label: "Liên hệ", value: "contact" },
-                ]}
-                label={
-                  <>
-                    Trạng thái <span className="text-red-600">*</span>
-                  </>
-                }
-                onChange={() => {}}
-              />
-            </div>
-          </div>
+                <div className="border-b-2 pt-6"></div>
 
-          <p className="border border-b-2"></p>
-
-          {/* Contact Info */}
-          <h5 className="text-lg font-semibold">Thông tin liên hệ</h5>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="flex flex-col gap-1">
-              <label className="text-sm text-gray-400">
-                Số điện thoại <span className="text-red-600">*</span>
-              </label>
-              <Input placeholder="0366858512" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-sm text-gray-400">Email</label>
-              <Input placeholder="example@gmail.com" />
-            </div>
-            <div className="grid grid-cols-5 gap-3 justify-center items-center">
-              <div className="col-span-2">
-                <CustomSelect
-                  options={[
-                    { label: "Facebook", value: "facebook" },
-                    { label: "Zalo", value: "zalo" },
-                  ]}
-                  label="Mạng xã hội"
-                  onChange={() => {}}
+                {/* Contact Info */}
+                <h5 className="text-lg font-semibold pt-4">
+                  Thông tin liên hệ
+                </h5>
+                <ContactInfoForm
+                  values={values}
+                  errors={errors}
+                  touched={touched}
+                  handleChange={handleChange}
+                  setFieldValue={setFieldValue}
+                />
+                <AddressInfoForm
+                  values={values}
+                  errors={errors}
+                  touched={touched}
+                  handleChange={handleChange}
+                  setFieldValue={setFieldValue}
                 />
               </div>
-              <div className="col-span-3">
-                <label className="invisible">Url</label>
-                <Input type="text" />
+
+              {/* Care Info Table */}
+              <div className="mt-6">
+                <h3 className="text-lg font-medium">
+                  Thông tin chăm sóc khách hàng
+                </h3>
+                <TableForm
+                  values={values.comments}
+                  handleChange={handleChange}
+                  setFieldValue={setFieldValue}
+                />
               </div>
-            </div>
-          </div>
 
-          {/* Address Info */}
-          <div className="grid grid-cols-3 gap-5">
-            <div className="">
-              <h5 className="text-lg font-bold">Thông tin chi tiết</h5>
-              <div className="flex flex-col gap-1 text-gray-400">
-                <label className="text-sm font-medium">Ghi chú</label>
-                <Textarea placeholder="Cần tư vấn chi tiết về xoa bóp cổ vai gáy" />
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="text-sm text-gray-400">Địa chỉ liên hệ</label>
-              <div className="flex flex-col gap-2">
-                <Input placeholder="Hà Nội" />
-                <Input placeholder="Đống Đa" />
-                <Input placeholder="Láng Thượng" />
-                <Input placeholder="số 32 Chùa Láng" />
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-sm text-gray-400">
-                Chọn khung giờ <span className="text-red-600">*</span>
-              </label>
-              <Input type="date" />
-            </div>
-          </div>
-        </div>
-
-        {/* Care Info Table */}
-        <div className="mt-6">
-          <h3 className="text-lg font-medium">Thông tin chăm sóc khách hàng</h3>
-          <TableForm />
-        </div>
-
-        <DialogFooter className="mt-6 flex justify-between">
-          <Button variant="outline" onClick={onClose}>
-            Hủy
-          </Button>
-          <Button>Xác nhận</Button>
-        </DialogFooter>
+              <DialogFooter className="mt-6 flex justify-between">
+                <Button variant="outline" onClick={onClose}>
+                  Hủy
+                </Button>
+                <Button type="submit">Xác nhận</Button>
+              </DialogFooter>
+            </Form>
+          )}
+        </Formik>
       </DialogContent>
     </Dialog>
   );

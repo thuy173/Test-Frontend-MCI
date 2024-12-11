@@ -11,8 +11,8 @@ import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik, Form, ErrorMessage } from "formik";
-import Logo from "../../assets/react.svg";
-import BackgroundImage from "../../assets/bgr-auth.jpg";
+import Logo from "../../assets/new-logo.png";
+import BackgroundImage from "../../assets/bgr.webp";
 import { useAppDispatch } from "@/hooks/use-app-dispatch";
 import { registerUser } from "@/redux/apps/auth/authSlice";
 

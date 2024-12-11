@@ -10,7 +10,6 @@ class AuthService {
   private readonly endpoints = {
     login: "/user-login/",
     register: "/create-user-account/",
-    logout: "/logout",
   };
 
   private constructor() {
@@ -57,10 +56,8 @@ class AuthService {
 
   async logout(): Promise<void> {
     try {
-      await httpClient.post<void>(this.endpoints.logout, {});
       this.tokenService.clearTokens();
     } catch (error) {
-      // Still clear tokens even if the API call fails
       this.tokenService.clearTokens();
       throw new Error(`Logout failed: ${error}`);
     }
