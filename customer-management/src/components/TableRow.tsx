@@ -1,3 +1,4 @@
+import { FilePenLine } from "lucide-react";
 import { TableCell, TableRow } from "./ui/table";
 
 type TableRowProps<T> = {
@@ -16,12 +17,15 @@ const TableRowComponent = <T,>({ data, columns }: TableRowProps<T>) => (
     {columns.map((column, index) => (
       <TableCell key={index} className={`${column.className || ""} py-4`}>
         {column.isActionColumn ? (
-          <>
-            <button onClick={() => column.action?.(data!)}>Edit</button>
-            <button onClick={() => column.action?.(data!)}>Delete</button>
-          </>
+          <div className="grid grid-cols-1 gap-1">
+            <button onClick={() => column.action?.(data!)}>
+              <FilePenLine className="text-yellow-800" />
+            </button>
+          </div>
         ) : column.render ? (
-          data ? column.render(data[column.key!], data) : null
+          data ? (
+            column.render(data[column.key!], data)
+          ) : null
         ) : (
           String(data![column.key!])
         )}

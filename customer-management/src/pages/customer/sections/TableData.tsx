@@ -55,9 +55,15 @@ const CustomerTable: React.FC = () => {
     { label: "Nguồn" },
     { label: "Ghi chú" },
     { label: "Ngày tạo" },
+    { label: " " },
   ];
 
-  const columns: { key: keyof Customer; className?: string }[] = [
+  const columns: {
+    key?: keyof Customer;
+    className?: string;
+    isActionColumn?: boolean;
+    action?: (data: Customer) => void;
+  }[] = [
     { key: "index", className: "text-center" },
     { key: "customerCode" },
     { key: "fullName" },
@@ -67,6 +73,13 @@ const CustomerTable: React.FC = () => {
     { key: "source" },
     { key: "note" },
     { key: "createAt" },
+    {
+      isActionColumn: true,
+      className: "text-center",
+      action: (customer) => {
+        console.log("Performing action for:", customer);
+      },
+    },
   ];
 
   return (
